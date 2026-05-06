@@ -1,0 +1,208 @@
+Result and Discussion
+
+
+4.1 Dataset Preparation
+
+The dataset used for pothole detection consists of 9273 images, annotated in YOLO format for object detection. Each image contains labeled bounding boxes representing potholes.
+
+Pre-processing Steps:
+Auto-orientation of images (removal of EXIF orientation)
+Resizing of all images to 640 × 640 pixels
+No data augmentation techniques were applied
+
+| Dataset Type | Number of Images |
+| ------------ | ---------------- |
+| Training     | 7481             |
+| Validation   | 1219             |
+| Testing      | 573              |
+
+The label visualization provides insights into the distribution and characteristics of the annotated dataset used for pothole detection. The dataset contains approximately 19,717 labeled instances, indicating a sufficiently large dataset for training the model.
+
+The bounding box visualization shows that most potholes are concentrated near the center of the images, revealing a positional bias in the dataset. This may affect the model’s ability to generalize well to objects located near the edges of the frame.
+
+The heatmap of object positions further confirms that the highest density of annotations is around the central region, with fewer samples at the boundaries. Additionally, the width and height distribution indicates that most potholes are small-sized objects, which makes detection more challenging and may lead to missed detections.
+
+Overall, the dataset is well-populated but exhibits center bias and dominance of small objects, which can influence model performance. Improving dataset diversity in terms of object location and size can enhance detection accuracy.
+
+Model Training
+
+The pothole detection model was developed using YOLOv8n, a lightweight and efficient object detection architecture suitable for real-time applications.
+
+The model was trained using the prepared dataset, where:
+
+Training data was used to learn pothole features
+Validation data was used to monitor performance and prevent overfitting
+
+
+Model Evaluation Method
+
+The trained YOLOv8n model was evaluated using the testing dataset. The predictions were compared with ground truth annotations using the Intersection over Union (IoU) metric.
+
+A detection is considered correct if:
+
+IoU ≥ 0.5
+Predicted class matches the ground truth
+
+
+Confusion Matrix
+
+The confusion matrix is constructed based on object-level predictions:
+|                      | Actual Pothole | Actual Background |
+| -------------------- | -------------- | ----------------- |
+| Predicted Pothole    | 1656           | 279               |
+| Predicted Background | 233            | 0                 |
+
+
+Where:
+
+True Positive (TP) = 1656
+False Positive (FP) = 279
+False Negative (FN) = 233
+True Negative (TN) ≈ 0
+
+Note: True negatives are not explicitly defined in object detection tasks; therefore, accuracy is not considered a reliable metric.
+
+
+Performance Metrics
+🔹 Precision
+𝑃
+𝑟
+𝑒
+𝑐
+𝑖
+𝑠
+𝑖
+𝑜
+𝑛
+=
+𝑇
+𝑃
+𝑇
+𝑃
++
+𝐹
+𝑃
+=
+85.6
+%
+Precision=
+TP+FP
+TP
+	​
+
+=85.6%
+🔹 Recall
+𝑅
+𝑒
+𝑐
+𝑎
+𝑙
+𝑙
+=
+𝑇
+𝑃
+𝑇
+𝑃
++
+𝐹
+𝑁
+=
+87.7
+%
+Recall=
+TP+FN
+TP
+	​
+
+=87.7%
+🔹 F1-Score
+𝐹
+1
+=
+86.6
+%
+F1=86.6%
+🔹 Mean Average Precision (mAP)
+
+Mean Average Precision (mAP) is a standard metric used in object detection to evaluate both detection accuracy and localization performance.
+
+mAP@0.5: Evaluates detections at IoU = 0.5
+mAP@0.5:0.95: Evaluates across multiple IoU thresholds
+
+(Insert your obtained mAP values here from training results)
+
+
+Error Analysis
+
+| Error Type      | Value |
+| --------------- | ----- |
+| False Positives | 279   |
+| False Negatives | 233   |
+
+
+False positives occur when non-pothole regions are incorrectly detected as potholes.
+False negatives occur when actual potholes are missed by the model.
+
+
+Model Deployment
+
+The trained YOLOv8n model was converted into ONNX format to enable efficient deployment on embedded systems.
+
+The ONNX model was deployed on a Raspberry Pi 5, allowing real-time inference with optimized performance.
+
+Rover-Based System Implementation
+
+A mobile rover platform was developed to test the system in real-world conditions.
+
+Components Used:
+Raspberry Pi 5
+Camera module
+Motor driver and DC motors
+Power supply system
+System Operation:
+The rover captures live video using the camera
+Each frame is processed using the deployed ONNX model
+Potholes are detected and highlighted in real time
+
+The rover successfully demonstrated autonomous movement and real-time detection capability.
+
+Email Alert System
+
+An automated email notification system was integrated into the system.
+
+ Working:
+Upon pothole detection:
+The system captures the detected frame
+Adds a timestamp
+Sends an email with the image attached
+Advantages:
+Enables remote monitoring
+Provides real-time alerts
+Useful for municipal authorities and maintenance teams
+
+Real-Time Performance Analysis
+
+The system was tested under real-world conditions using the rover platform. The following observations were made:
+
+The model successfully detected potholes in real time
+Detection performance remained consistent on embedded hardware
+Slight latency was observed due to hardware limitations
+The email alert system functioned reliably upon detection
+
+Discussion
+
+The results demonstrate that the YOLOv8n model performs effectively for pothole detection tasks. The high precision and recall values indicate that the model is capable of accurately detecting potholes while minimizing false detections.
+
+The deployment of the model in ONNX format on Raspberry Pi 5 confirms the feasibility of running deep learning models on edge devices. The rover-based implementation further validates the system’s capability to operate in dynamic, real-world environments.
+
+The integration of real-time detection with an automated email alert system enhances the practicality and usability of the solution for smart transportation and infrastructure monitoring.
+
+CONCLUSION
+
+The project successfully developed a complete pothole detection system using the YOLOv8n model. The system includes dataset preparation, model training, evaluation, deployment, and real-world testing.
+
+The model achieved strong performance with high precision, recall, and F1-score, ensuring reliable detection of potholes. The conversion to ONNX format enabled efficient deployment on Raspberry Pi 5, supporting real-time processing.
+
+The rover-based testing demonstrated the system’s effectiveness in real-world conditions, while the email alert mechanism provided an additional layer of functionality for remote monitoring and timely response.
+
+Overall, the proposed system is an efficient, scalable, and practical solution for automated pothole detection, contributing to improved road safety and maintenance systems.
